@@ -12,9 +12,7 @@ It creates HTML, Images, and Video.
 2. Add the wkhtmltopdf package repository:
 
 ```shell
-Copy code
 sudo apt-add-repository -y ppa:ecometrica/servers
-Update the package lists:
 sudo apt update
 sudo apt install wkhtmltopdf
 ```
