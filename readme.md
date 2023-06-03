@@ -41,11 +41,17 @@ python report.py [--image-directory IMAGE_DIRECTORY] [--json-directory JSON_DIRE
 Optional Arguments:
 
 --image-directory IMAGE_DIRECTORY: Path to the directory containing the input images (default: "images").
+
 --json-directory JSON_DIRECTORY: Path to the directory containing the JSON files (default: "meta").
+
 --output-directory OUTPUT_DIRECTORY: Path to the directory where the HTML reports will be saved (default: "html_reports").
+
 --video-output VIDEO_OUTPUT: Path to the output video file (default: "output.mp4").
+
 --image-width IMAGE_WIDTH: Width of the output images and video frames (default: 1280).
+
 --image-height IMAGE_HEIGHT: Height of the output images and video frames (default: 720).
+
 --frame-rate FRAME_RATE: Frame rate of the output video (default: 5).
 Note: The script expects the input images and JSON files to have the same filename (except for the extension). For example, if the image is "image1.jpg", the corresponding JSON file should be "image1.json".
 
