@@ -1,3 +1,4 @@
 yattag
 opencv-contrib-python
 typer
+imgkit

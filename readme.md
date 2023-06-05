@@ -55,7 +55,7 @@ Note: The script expects the input images and JSON files to have the same filena
 
 ## Example
 ```shell
-python report.py --image-directory images --json-directory meta --output-directory html_reports
+python report.py --image-directory /absolute/path/to/images --json-directory meta --output-directory html_reports
                  --video-output output.mp4 --image-width 1280 --image-height 720 --frame-rate 5
 ```
 

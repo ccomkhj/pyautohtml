@@ -3,6 +3,7 @@ import json
 import os
 import re
 from datetime import datetime
+import imgkit
 
 import cv2
 import typer
@@ -23,8 +24,11 @@ def get_datetime_from_filename(filename):
 
 # Function to generate the HTML report
 def generate_html_report(report_id, image_path, json_data):
+
     # Create a new HTML document
-    doc, tag, text = Doc().tagtext()
+    doc, tag, text = Doc(
+        defaults={'ingredient': ['chocolate', 'coffee']}
+    ).tagtext()
 
     # Add the HTML content
     with tag("html"):
@@ -33,109 +37,8 @@ def generate_html_report(report_id, image_path, json_data):
                 text("Report")
             with tag("style"):
                 # Add the CSS code here
-                css_code = """
-                .rwd-table {
-                margin: 1em auto;
-                min-width: 300px; 
-                
-                tr {
-                    border-top: 1px solid #ddd;
-                    border-bottom: 1px solid #ddd;
-                }
-                
-                th {
-                    display: none;
-                }
-                
-                td {
-                    display: block; 
-                    
-                    &:first-child {
-                    padding-top: .5em;
-                    }
-                    &:last-child {
-                    padding-bottom: .5em;
-                    }
-
-                    &:before {
-                    content: attr(data-th)": "; 
-                    font-weight: bold;
-
-
-                    width: 6.5em; 
-                    display: inline-block;
-
-                    
-                    @media (min-width: $breakpoint-alpha) {
-                        display: none;
-                    }
-                    }
-                }
-                
-                th, td {
-                    text-align: left;
-                    
-                    @media (min-width: $breakpoint-alpha) {
-                    display: table-cell;
-                    padding: .25em .5em;
-                    
-                    &:first-child {
-                        padding-left: 0;
-                    }
-                    
-                    &:last-child {
-                        padding-right: 0;
-                    }
-                    }
-
-                }
-                
-                
-                }
-
-                @import 'https://fonts.googleapis.com/css?family=Montserrat:300,400,700';
-
-                body {
-                padding: auto 3em;
-                letter-spacing: 2px;
-                font-family: Montserrat, sans-serif;
-                -webkit-font-smoothing: antialiased;
-                text-rendering: optimizeLegibility;
-                color: #444;
-                background: #eee;
-                }
-
-                h1 {
-                font-weight: normal;
-                letter-spacing: -1px;
-                color: #34495E;
-                }
-
-                .rwd-table {
-                    background: #34495E;
-                    color: #fff;
-                    border-radius: .4em;
-                    overflow: hidden;
-                    tr {
-                        border-color: lighten(#34495E, 10%);
-                    }
-                    th, td {
-                        border: 1px solid #FFFFFF; 
-                        margin: .5em 1em;
-                        @media (min-width: $breakpoint-alpha) { 
-                            padding: .5em 1em;
-                        }
-                    }
-                    th, td:before {
-                        color: #dd5;
-                    }
-                }
-                
-                .rwd-table img {
-                    width: 100%;
-                    height: auto;
-                }
-                """
+                with open('css/default.css', 'r') as file:
+                    css_code = file.read()
                 text(css_code)
         with tag("body"):
             with tag("h1"):
@@ -155,6 +58,7 @@ def generate_html_report(report_id, image_path, json_data):
             with tag("div", klass="rwd-table"):
                 with tag("img", src=image_path):
                     pass
+
 
                 with tag("table", klass="rwd-table"):
                     # Generate HTML report table headers dynamically based on JSON keys
@@ -178,7 +82,7 @@ def generate_html_report(report_id, image_path, json_data):
 
 
 def main(
-    image_directory: str = "images",
+    image_directory: str = "images", # it must be absolute path for image loading.
     json_directory: str = "meta",
     output_directory: str = "html_reports",
     video_output: str = "output.mp4",
@@ -208,7 +112,15 @@ def main(
             file.write(html_report)
 
         image_output = os.path.join(output_directory, f"report_{i}.jpg")
-        os.system(f"wkhtmltoimage {report_file} {image_output}")
+
+        options = {
+            'format': 'jpg',
+            'encoding': "UTF-8",
+            'enable-local-file-access': None
+        }
+
+        imgkit.from_file(report_file, image_output, options=options)
+
 
     images = sorted(glob.glob(os.path.join(output_directory, "*.jpg")))
 
